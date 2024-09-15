@@ -1,0 +1,46 @@
+.fondo {
+  background-color: #fefae0;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.logo {
+  border-radius: 50%;
+  width: 300px;
+  height: 300px;
+  object-fit: cover;
+  animation: bounce 2s infinite;
+}
+
+/* Animación de rebote */
+@keyframes bounce {
+  0%,
+  20%,
+  50%,
+  80%,
+  100% {
+    transform: translateY(0);
+  }
+  40% {
+    transform: translateY(-30px);
+  }
+  60% {
+    transform: translateY(-15px);
+  }
+}
+
+h1,
+h2 {
+  font-family: "Inria Sans", sans-serif;
+  margin: 10px 0;
+  color: #3a5a40;
+}

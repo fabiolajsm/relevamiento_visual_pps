@@ -1,0 +1,39 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>
+      Mis fotos
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="fondo">
+    <ion-header collapse="condense">
+      <ion-toolbar>
+        <ion-title size="large">Tab 3</ion-title>
+      </ion-toolbar>
+    </ion-header>
+    <ion-grid>
+      <ion-row>
+        <ion-col *ngFor="let foto of fotos;" size="6">
+          <ion-card [attr.id]="'card-' + foto.id" tabindex="-1">
+            <div class="card">
+              <div class="image_container">
+                <img [src]="foto.url" [alt]="foto.id">
+              </div>
+              <div class="title" [ngClass]="foto.tipo === 'fea' ? 'notselected' : 'selected'">
+                <span>{{ foto.tipo }}</span>
+              </div>
+              <div>
+                <p>Fecha: {{ foto.fecha }}</p>
+              </div>
+            </div>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+  
+
+  
+</ion-content>

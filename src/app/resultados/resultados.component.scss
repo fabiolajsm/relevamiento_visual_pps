@@ -1,0 +1,84 @@
+// .advanced-pie-legend-wrapper {
+//     display: none !important;
+// }
+
+
+
+.ngx-charts-tooltip-content.type-tooltip .tooltip-caret.position-top {
+    border-top: 7px solid !important;
+    size: 5px;
+}
+
+.ngx-charts-tooltip-content.type-tooltip .tooltip-caret.position-right {
+    border-right: 7px solid !important;
+    size: 5px;
+}
+
+.ngx-charts-tooltip-content.type-tooltip .tooltip-caret.position-bottom {
+    border-bottom: 7px solid !important;
+    size: 5px;
+}
+
+.ngx-charts-tooltip-content.type-tooltip .tooltip-caret.position-left {
+    border-left: 7px solid !important;
+    size: 5px;
+}
+
+.fondo {
+    width: 100%;
+    min-height: 100vh; /* This ensures the background covers the whole page */
+    --s: 100px; /* control the size */
+    --c1: #ff8afc;
+    --c2: #1b1b3a;
+  
+    --_g: var(--c2) 6% 14%, var(--c1) 16% 24%, var(--c2) 26% 34%,
+      var(--c1) 36% 44%, var(--c2) 46% 54%, var(--c1) 56% 64%, var(--c2) 66% 74%,
+      var(--c1) 76% 84%, var(--c2) 86% 94%;
+    background: radial-gradient(
+        100% 100% at 100% 0,
+        var(--c1) 4%,
+        var(--_g),
+        #0008 96%,
+        #0000
+      ),
+      radial-gradient(
+          100% 100% at 0 100%,
+          #0000,
+          #0008 4%,
+          var(--_g),
+          var(--c1) 96%
+        )
+        var(--c1);
+    background-size: var(--s) var(--s);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    color: white;
+  }
+
+  .large-icon {
+    font-size: 30px; /* Ajusta el tamaño del icono aquí */
+    width: 30px; /* Ajusta el tamaño del icono aquí */
+    height: 30px; /* Ajusta el tamaño del icono aquí */
+    color: white; /* Cambia el color del icono si es necesario */
+  }
+  
+  ion-toolbar {
+    display: flex;
+    justify-content: center;
+    position: relative;
+  }
+  
+  ion-title {
+    position: absolute;
+    left: 50%;
+    transform: translateX(-50%);
+    color: white; /* Cambia el color del título si es necesario */
+  }
+  
+  ion-buttons {
+    position: absolute;
+    left: 10px;
+   
+  }

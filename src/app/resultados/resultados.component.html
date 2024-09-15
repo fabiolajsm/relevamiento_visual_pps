@@ -1,0 +1,26 @@
+<ion-header color="black">
+  <ion-toolbar>
+    <ion-button slot="start" (click)="back()" color="black">
+      <ion-icon  name="arrow-back-circle-outline" class="large-icon"></ion-icon>
+    </ion-button>
+    <ion-title>
+      Resultados
+    </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="fondo">
+    <ion-row class="container">
+      <ion-col size="11" style="margin-left: 20px; margin-top: 10px;">
+        <div *ngIf="xL.length > 0">
+          <div echarts [options]="optionsLindas" [theme]="theme" class="demo-chart"></div>
+        </div>
+      </ion-col>
+
+      <ion-col size="10" *ngIf="optionsFeas && xF.length > 0" style="margin-left: 2.0rem;">
+        <echarts [initOpts]="initOptsFeas" [options]="optionsFeas"></echarts>
+      </ion-col>
+    </ion-row>
+  </div>
+</ion-content>

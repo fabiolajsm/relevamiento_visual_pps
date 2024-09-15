@@ -1,0 +1,198 @@
+.wrapper {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    text-align: center;
+    height: 170px;
+    width: 400px;
+    margin: 0 auto;
+    background-color: white;
+  }
+  
+  b {
+    width: 100%;
+  }
+  
+  .ripple-parent {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  
+    position: relative;
+    overflow: hidden;
+  
+    border: 1px solid #ddd;
+  
+    user-select: none;
+  }
+  
+  .rounded-rectangle {
+    width: 250px;
+    height: 75px;
+    border-radius: 8px;
+  }
+  
+  .circle {
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+  }
+  
+  .container {
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    /* Divide la pantalla en dos filas iguales */
+    height: 100%;
+  }
+  
+  
+  .top:active,
+  .bottom:active {
+    transform: scale(0.95);
+    /* Escalar ligeramente cuando se hace clic */
+  }
+  
+  .top,
+  .bottom {
+    width: 270px;
+    display: flex;
+    justify-content: center;
+    /* Centra horizontalmente el contenido */
+    align-items: center;
+    /* Centra verticalmente el contenido */
+    border: 2px solid #999;
+    /* Borde de 2px sólido */
+    border-radius: 8px;
+    /* Bordes redondeados */
+    box-shadow: 2px 2px 5px #aaa;
+    /* Sombra */
+  }
+  
+  .top {
+    background-color: var(--ion-color-success);
+  
+   
+    /* Color de fondo para la primera fila */
+  }
+  
+  .bottom {
+    background-color: var(--ion-color-danger);
+    
+  
+    /* Color de fondo para la segunda fila */
+  }
+  
+  .contenedor {
+    position: relative;
+    display: inline-block;
+    text-align: center;
+  }
+  
+  
+  .centradoTop {
+    position: relative;
+    top: 99%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+  
+  .centradoBot {
+    position: relative;
+    top: 15%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+  }
+
+  .fondo{
+    width: 100%;
+    height: 100%;
+    --s: 100px; /* control the size */
+    --c1: #ff8afc;
+    --c2: #1b1b3a;
+  
+    --_g: var(--c2) 6% 14%, var(--c1) 16% 24%, var(--c2) 26% 34%,
+      var(--c1) 36% 44%, var(--c2) 46% 54%, var(--c1) 56% 64%, var(--c2) 66% 74%,
+      var(--c1) 76% 84%, var(--c2) 86% 94%;
+    background: radial-gradient(
+        100% 100% at 100% 0,
+        var(--c1) 4%,
+        var(--_g),
+        #0008 96%,
+        #0000
+      ),
+      radial-gradient(
+          100% 100% at 0 100%,
+          #0000,
+          #0008 4%,
+          var(--_g),
+          var(--c1) 96%
+        )
+        var(--c1);
+    background-size: var(--s) var(--s);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+
+  ion-toolbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+  
+  ion-title {
+    flex: 1;
+    text-align: center;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .Btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 45px;
+    height: 45px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    background-color: #ff8afc;
+    margin: 0;
+  }
+  
+  .sign {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .sign svg {
+    width: 17px;
+  }
+  
+  .sign svg path {
+    fill: black;
+  }
+  
+  /* Elimina la clase .text si no se necesita */
+  .text {
+    display: none;
+  }
+  
+  /* Elimina los estilos de animación y hover */
+  .Btn:hover,
+  .Btn:hover .sign,
+  .Btn:hover .text,
+  .Btn:active {
+    transform: none;
+    width: 45px;
+    border-radius: 50%;
+    opacity: 1;
+    padding-left: 0;
+    padding-right: 0;
+    transition: none;
+    box-shadow: none;
+  }
