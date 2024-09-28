@@ -1,9 +1,24 @@
 import { Component, OnInit } from '@angular/core';
 import { Foto } from '../interfaces/foto';
 import { ImageService } from '../services/image.service';
-import { IonCol, IonRow, IonContent, IonHeader, IonToolbar, IonTitle, IonIcon, IonButtons, IonButton } from "@ionic/angular/standalone";
+import {
+  IonCol,
+  IonRow,
+  IonContent,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonIcon,
+  IonButtons,
+  IonButton,
+} from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
-import { NgxEchartsDirective, NgxEchartsModule, ThemeOption, provideEcharts } from 'ngx-echarts';
+import {
+  NgxEchartsDirective,
+  NgxEchartsModule,
+  ThemeOption,
+  provideEcharts,
+} from 'ngx-echarts';
 import { ECharts, EChartsOption } from 'echarts';
 import { addIcons } from 'ionicons';
 import { arrowBackCircleOutline } from 'ionicons/icons';
@@ -14,13 +29,23 @@ import { Route, Router } from '@angular/router';
   templateUrl: './resultados.component.html',
   styleUrls: ['./resultados.component.scss'],
   standalone: true,
-  imports: [IonButton, IonButtons, IonIcon, IonTitle, IonToolbar, IonHeader, IonContent, IonRow, IonCol, CommonModule, NgxEchartsDirective, NgxEchartsModule],
-  providers: [
-    provideEcharts(),
-  ]
+  imports: [
+    IonButton,
+    IonButtons,
+    IonIcon,
+    IonTitle,
+    IonToolbar,
+    IonHeader,
+    IonContent,
+    IonRow,
+    IonCol,
+    CommonModule,
+    NgxEchartsDirective,
+    NgxEchartsModule,
+  ],
+  providers: [provideEcharts()],
 })
-export class ResultadosComponent  implements OnInit {
-
+export class ResultadosComponent implements OnInit {
   coolTheme = {
     color: [
       '#b21ab4',
@@ -51,7 +76,7 @@ export class ResultadosComponent  implements OnInit {
     tooltip: {
       backgroundColor: 'rgba(0,0,0,0.5)',
       axisPointer: {
-        type: 'line', 
+        type: 'line',
         lineStyle: {
           color: '#00aecd',
           type: 'dashed',
@@ -66,9 +91,9 @@ export class ResultadosComponent  implements OnInit {
     },
 
     dataZoom: {
-      dataBackgroundColor: '#eee', 
-      fillerColor: 'rgba(144,197,237,0.2)', 
-      handleColor: '#00aecd', 
+      dataBackgroundColor: '#eee',
+      fillerColor: 'rgba(144,197,237,0.2)',
+      handleColor: '#00aecd',
     },
 
     timeline: {
@@ -163,128 +188,132 @@ export class ResultadosComponent  implements OnInit {
   public xF: any[] = [];
   public xL: any[] = [];
 
-  constructor(private imageService: ImageService, private router : Router) { addIcons({arrowBackCircleOutline})}
+  constructor(private imageService: ImageService, private router: Router) {
+    addIcons({ arrowBackCircleOutline });
+  }
 
   ngOnInit(): void {
     this.fotosFeas = [];
     this.fotosLindas = [];
-    this.imageService.traer()
-      .subscribe(fotos => {
-        fotos.forEach(f => {
-          if (f.tipo == "fea") {
-            this.fotosFeas.push(f);
-          } else {
-            this.fotosLindas.push(f);
-          }
-        });
+    this.imageService.traer().subscribe((fotos) => {
+      fotos.forEach((f) => {
+        if (f.tipo == 'fea') {
+          this.fotosFeas.push(f);
+        } else {
+          this.fotosLindas.push(f);
+        }
+      });
 
-        const yL: any = [];
-        const seriesLindas: any = [];
-        this.fotosLindas.forEach(f => {
-          this.xL.push(`<img src="{f.url}" alt="{f.id}" style="width: 100%;">`);
-          yL.push(this.contabilizarFoto(f));
-          seriesLindas.push(
-            { value: this.contabilizarFoto(f), name: f.url, label: { show: false }, labelLine: { show: false } }
-          );
-          this.optionsLindas = {
-            backgroundColor: 'hsla(262, 30%, 30%, 0.8)',
-            title: {
-              left: '50%',
-              text: 'Lindas',
-              textAlign: 'center',
-              textStyle: {
-                color: 'white'
-              }
-            },
-            tooltip: {
-              confine: true,
-              trigger: 'item',
-              formatter: '<div style="width: 9.5rem;"> {a}: {c} <br>  <img src="{b}" alt="foto"></div>',
-            },
-            calculable: true,
-            series: [
-              {
-                name: 'Votos',
-                type: 'pie',
-                radius: ['20%', '70%'],
-                roseType: 'radius',
-                data: seriesLindas,
-              },
-            ],
-          };
+      const yL: any = [];
+      const seriesLindas: any = [];
+      this.fotosLindas.forEach((f) => {
+        this.xL.push(`<img src="{f.url}" alt="{f.id}" style="width: 100%;">`);
+        yL.push(this.contabilizarFoto(f));
+        seriesLindas.push({
+          value: this.contabilizarFoto(f),
+          name: f.url,
+          label: { show: false },
+          labelLine: { show: false },
         });
-
-        const xF: any[] = [];
-        const yF: any[] = [];
-        const series: any = [];
-        this.fotosFeas.forEach(f => {
-          if (f.votes.length > 0) {
-            this.xF.push(f.url);
-            series.push(
-              { value: this.contabilizarFoto(f), name: f.url }
-            );
-            yF.push(this.contabilizarFoto(f))
-          }
-        });
-        this.optionsFeas = {
+        this.optionsLindas = {
           backgroundColor: 'hsla(262, 30%, 30%, 0.8)',
           title: {
             left: '50%',
-            text: 'Feas',
+            text: 'Lindas',
             textAlign: 'center',
             textStyle: {
-              color: 'white'
-            }
+              color: 'white',
+            },
           },
-          color: ['#3398DB'],
           tooltip: {
             confine: true,
             trigger: 'item',
-            formatter: '<div style="width: 9.5rem;"> {a}: {c} <br>  <img src="{b}" alt="foto"></div>',
-            axisPointer: {
-              type: 'shadow',
-            },
+            formatter:
+              '<div style="width: 9.5rem;"> {a}: {c} <br>  <img src="{b}" alt="foto"></div>',
           },
-          grid: {
-            left: '3%',
-            right: '4%',
-            bottom: '3%',
-            containLabel: true,
-          },
-          xAxis: [
-            {
-              type: 'category',
-              data: xF,
-              axisTick: {
-                alignWithLabel: true,
-              },
-            },
-          ],
-          yAxis: [
-            {
-              type: 'value',
-              axisLabel: {
-                color: 'white'
-              }
-            },
-          ],
+          calculable: true,
           series: [
             {
               name: 'Votos',
-              type: 'bar',
-              barWidth: '60%',
-              data: series,
+              type: 'pie',
+              radius: ['20%', '70%'],
+              roseType: 'radius',
+              data: seriesLindas,
             },
           ],
         };
       });
+
+      const xF: any[] = [];
+      const yF: any[] = [];
+      const series: any = [];
+      this.fotosFeas.forEach((f) => {
+        if (f.votes.length > 0) {
+          this.xF.push(f.url);
+          series.push({ value: this.contabilizarFoto(f), name: f.url });
+          yF.push(this.contabilizarFoto(f));
+        }
+      });
+      this.optionsFeas = {
+        backgroundColor: 'hsla(262, 30%, 30%, 0.8)',
+        title: {
+          left: '50%',
+          text: 'Feas',
+          textAlign: 'center',
+          textStyle: {
+            color: 'white',
+          },
+        },
+        color: ['#3398DB'],
+        tooltip: {
+          confine: true,
+          trigger: 'item',
+          formatter:
+            '<div style="width: 9.5rem;"> {a}: {c} <br>  <img src="{b}" alt="foto"></div>',
+          axisPointer: {
+            type: 'shadow',
+          },
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true,
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: xF,
+            axisTick: {
+              alignWithLabel: true,
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            axisLabel: {
+              color: 'white',
+            },
+          },
+        ],
+        series: [
+          {
+            name: 'Votos',
+            type: 'bar',
+            barWidth: '60%',
+            data: series,
+          },
+        ],
+      };
+    });
   }
 
   contabilizarFoto(photo: Foto) {
     return photo.votes.length;
   }
 
-  back(){
+  back() {
     this.router.navigate(['tabs/tab2']);
   }
 }

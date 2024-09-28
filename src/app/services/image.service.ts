@@ -1,58 +1,73 @@
 import { Injectable } from '@angular/core';
-import { Firestore, collection, doc, onSnapshot, orderBy, query, setDoc, updateDoc, where } from '@angular/fire/firestore';
+import {
+  Firestore,
+  collection,
+  doc,
+  onSnapshot,
+  orderBy,
+  query,
+  setDoc,
+  updateDoc,
+  where,
+} from '@angular/fire/firestore';
 import { AuthService } from './auth.service';
 import { Photo } from '@capacitor/camera';
-import { Observable, BehaviorSubject } from 'rxjs'; // Import BehaviorSubject
+import { Observable, BehaviorSubject } from 'rxjs';
 import { Foto } from '../interfaces/foto';
-import { UserService } from './user.service';
-import { Storage, getDownloadURL, ref, uploadString } from '@angular/fire/storage';
-import { User } from '../interfaces/user';
+import {
+  Storage,
+  getDownloadURL,
+  ref,
+  uploadString,
+} from '@angular/fire/storage';
+import { UserInterface } from '../interfaces/user';
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: 'root',
 })
 export class ImageService {
-
-  private dataRef = collection(this.firestore, 'fotos');
-  private dataRefUsers = collection(this.firestore, 'usuarios');
+  private dataRefPhotos = collection(this.firestore, 'fotos');
+  private dataRefUsers = collection(this.firestore, 'users');
   public fecha: Date = new Date();
 
   // Define un BehaviorSubject para notificar cambios en la lista de fotos
   private fotosSubject = new BehaviorSubject<Foto[]>([]);
   fotos$ = this.fotosSubject.asObservable();
-  private nuevaFotoSubject = new BehaviorSubject<void>(undefined);
+  private newPhotoSubject = new BehaviorSubject<void>(undefined);
 
-  constructor(private storage: Storage, private firestore: Firestore, private auth: AuthService, private userService: UserService) { }
+  constructor(
+    private storage: Storage,
+    private firestore: Firestore,
+    private auth: AuthService
+  ) {}
 
   async subirImg(cameraFile: Photo, fotoType: string): Promise<string | null> {
-    const path = `fotos/${fotoType}-${this.auth.userActive?.email}-${this.formatDate(this.fecha)}.jpeg`;
+    const path = `fotos/${fotoType}-${this.auth.getCurrentUserEmail()}-${this.formatDate(
+      this.fecha
+    )}.jpeg`;
     const storageRef = ref(this.storage, path);
 
     try {
-      await uploadString(
-        storageRef,
-        cameraFile?.base64String || '',
-        'base64'
-      );
+      await uploadString(storageRef, cameraFile?.base64String || '', 'base64');
 
       const imageUrl = await getDownloadURL(storageRef);
 
       const foto: Foto = {
         id: '',
         url: imageUrl,
-        user: this.auth.userActive?.email || '',
+        user: this.auth.getCurrentUserEmail() || '',
         tipo: fotoType,
         fecha: this.formatDate(this.fecha).toString(),
         votes: [],
       };
 
-      const docRef = doc(this.dataRef);
+      const docRef = doc(this.dataRefPhotos);
       foto.id = docRef.id;
 
       await setDoc(docRef, foto);
 
       // Notifica sobre la nueva foto
-      this.nuevaFotoSubject.next();
+      this.newPhotoSubject.next();
 
       return imageUrl;
     } catch (e) {
@@ -61,15 +76,15 @@ export class ImageService {
     }
   }
 
-  onNuevaFoto(): Observable<void> {
-    return this.nuevaFotoSubject.asObservable();
+  onUploadNewPhoto(): Observable<void> {
+    return this.newPhotoSubject.asObservable();
   }
 
   traer(): Observable<Foto[]> {
     return new Observable<Foto[]>((observer) => {
-      onSnapshot(this.dataRef, (snap) => {
+      onSnapshot(this.dataRefPhotos, (snap) => {
         const fotos: Foto[] = [];
-        snap.docChanges().forEach(x => {
+        snap.docChanges().forEach((x) => {
           const one = x.doc.data() as Foto;
           fotos.push(one);
         });
@@ -79,11 +94,15 @@ export class ImageService {
   }
 
   traerFotosUsuario(email: string): Observable<Foto[]> {
-    const userPhotosQuery = query(this.dataRef, where('user', '==', email), orderBy('fecha', 'desc'));
+    const userPhotosQuery = query(
+      this.dataRefPhotos,
+      where('user', '==', email),
+      orderBy('fecha', 'desc')
+    );
     return new Observable<Foto[]>((observer) => {
       onSnapshot(userPhotosQuery, (snap) => {
         const fotos: Foto[] = [];
-        snap.docChanges().forEach(x => {
+        snap.docChanges().forEach((x) => {
           const one = x.doc.data() as Foto;
           fotos.push(one);
         });
@@ -92,9 +111,9 @@ export class ImageService {
     });
   }
 
-  async votePhoto(photo: Foto, user: User) {
+  async votePhoto(photo: Foto, user: UserInterface) {
     if (user) {
-      const docsPhoto = doc(this.dataRef, photo.id);
+      const docsPhoto = doc(this.dataRefPhotos, photo.id);
       await updateDoc(docsPhoto, { votes: photo.votes });
       const docsUser = doc(this.dataRefUsers, user.id);
       await updateDoc(docsUser, { votos: user.votos });
@@ -105,9 +124,9 @@ export class ImageService {
   }
 
   notifyFotosChange() {
-    const userEmail = this.auth.userActive?.email;
+    const userEmail = this.auth.getCurrentUserEmail();
     if (userEmail) {
-      this.traerFotosUsuario(userEmail).subscribe(fotos => {
+      this.traerFotosUsuario(userEmail).subscribe((fotos) => {
         this.fotosSubject.next(fotos);
       });
     }

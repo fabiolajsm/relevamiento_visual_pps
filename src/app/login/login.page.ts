@@ -1,67 +1,72 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import {
+  FormBuilder,
+  FormGroup,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { Router } from '@angular/router';
 import { AuthService } from '../services/auth.service';
+import { FirebaseError } from 'firebase/app';
+import { authErrors } from '../services/auth.errors';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-login',
   templateUrl: './login.page.html',
   styleUrls: ['./login.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [CommonModule, ReactiveFormsModule, NgxSpinnerModule],
 })
 export class LoginPage {
+  form: FormGroup = this.fb.group({
+    email: ['', [Validators.required, Validators.email]],
+    password: ['', [Validators.required]],
+  });
+  errorMessage: string | undefined = undefined;
 
-  email: string = "";
-  password : string = "";
-  flagError : boolean = false;
-  loggedUser: string = "";
-  msjError : string = "";
+  constructor(
+    private fb: FormBuilder,
+    private router: Router,
+    private authService: AuthService,
+    private spinner: NgxSpinnerService
+  ) {}
 
-  constructor(private router: Router, public auth : AuthService) {}
+  handleSubmit() {
+    this.spinner.show();
+    if (this.form.invalid) {
+      this.errorMessage = 'Por favor, complete todos los campos correctamente.';
+      this.spinner.hide();
+      return;
+    }
 
-  LoginUser() {
-    this.auth.Login(this.email, this.password).then((res) => {
-      if (res.user.email !== null) this.auth.userActive = res.user;
-      this.goTo("tabs")
-      this.flagError = false;
-      this.email ="";
-      this.password = "";
-    }).catch((e) => {
+    const { email, password } = this.form.value;
 
-      this.flagError = true;
-
-      switch(e.code) {
-        case "auth/invalid-email":
-          this.msjError = "Email invalido";
-          break;
-        case "auth/invalid-credential":
-          this.msjError = "El email o contraseña son incorrectos";
-          break;
-        case "auth/missing-password":
-          this.msjError = "Por favor introduzca una contraseña";
-          break;
-        case "auth/too-many-requests":
-          this.msjError = "Por favor ingrese bien sus datos";
-          break;
-        default:
-          this.msjError = e.code
-          break;
-      }
+    this.authService.login(email, password).subscribe({
+      next: () => {
+        this.spinner.hide();
+        this.errorMessage = undefined;
+        this.router.navigateByUrl('');
+        this.form.controls['email'].setValue('');
+        this.form.controls['password'].setValue('');
+      },
+      error: (err: FirebaseError) => {
+        let errorMessage = 'Se produjo un error desconocido.';
+        for (const error of authErrors) {
+          if (error.code === err.code) {
+            errorMessage = error.message;
+            break;
+          }
+        }
+        this.errorMessage = errorMessage;
+        this.spinner.hide();
+      },
     });
   }
 
-  Rellenar(email : string, password : string){
-    this.email = email;
-    this.password = password;
+  handleQuickAccess(email: string, password: string) {
+    this.form.controls['email'].setValue(email);
+    this.form.controls['password'].setValue(password);
   }
-
-
-  goTo(path : string)
-  {
-    this.router.navigate([path]);
-  }
-
 }

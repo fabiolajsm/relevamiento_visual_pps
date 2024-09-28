@@ -34,6 +34,11 @@ log.txt
 npm-debug.log
 yarn-error.log
 
+# Android
+/.android
+/android
+android
+
 # IDEs and editors
 .idea/
 .project

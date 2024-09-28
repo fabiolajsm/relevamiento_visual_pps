@@ -10,6 +10,6 @@ import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 })
 export class AppComponent {
   constructor(public router: Router) {
-    this.router.navigateByUrl("splash");
+    this.router.navigateByUrl('splash');
   }
 }

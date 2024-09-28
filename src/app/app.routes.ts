@@ -7,14 +7,18 @@ export const routes: Routes = [
   },
   {
     path: 'splash',
-    loadComponent: () => import('./splash/splash.page').then( m => m.SplashPage)
+    loadComponent: () =>
+      import('./splash/splash.page').then((m) => m.SplashPage),
   },
   {
     path: 'login',
-    loadComponent: () => import('./login/login.page').then( m => m.LoginPage)
+    loadComponent: () => import('./login/login.page').then((m) => m.LoginPage),
   },
   {
     path: 'resultados',
-    loadComponent: () => import('./resultados/resultados.component').then( m => m.ResultadosComponent)
+    loadComponent: () =>
+      import('./resultados/resultados.component').then(
+        (m) => m.ResultadosComponent
+      ),
   },
 ];

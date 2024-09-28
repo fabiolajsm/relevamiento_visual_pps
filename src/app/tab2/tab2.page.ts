@@ -1,39 +1,51 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { Foto } from '../interfaces/foto';
-import { User } from '../interfaces/user';
+import { UserInterface } from '../interfaces/user';
 import { ImageService } from '../services/image.service';
 import { AuthService } from '../services/auth.service';
-import { UserService } from '../services/user.service';
 import { Router } from '@angular/router';
 import { LoadingController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
-import { ExploreContainerComponent } from '../explore-container/explore-container.component';
-import { IonHeader, IonContent, IonToolbar, IonTitle, IonGrid, IonRow, IonCol, IonCard, IonIcon, IonButton } from "@ionic/angular/standalone";
+import {
+  IonHeader,
+  IonContent,
+  IonToolbar,
+  IonTitle,
+  IonIcon,
+} from '@ionic/angular/standalone';
 import { Subscription } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { heart } from 'ionicons/icons';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 
 @Component({
   selector: 'app-tab2',
   templateUrl: 'tab2.page.html',
   styleUrls: ['tab2.page.scss'],
   standalone: true,
-  imports: [IonButton, IonIcon, IonCard, IonCol, IonRow, IonGrid, IonTitle, IonToolbar, IonContent, IonHeader, IonIcon, IonButton, IonGrid, IonRow, IonCard, IonCol, IonHeader, IonToolbar, IonTitle, IonContent, ExploreContainerComponent, CommonModule]
+  imports: [
+    IonIcon,
+    IonTitle,
+    IonToolbar,
+    IonContent,
+    IonHeader,
+    CommonModule,
+    NgxSpinnerModule,
+  ],
 })
-export class Tab2Page implements OnInit, OnDestroy{
+export class Tab2Page implements OnInit, OnDestroy {
   public fotos: Foto[] = [];
-  public user: User | undefined | null;
-  private focusedElementId?: string;
+  public user: UserInterface | undefined | null;
   private nuevaFotoSubscription: Subscription | undefined;
 
   constructor(
     private imageService: ImageService,
     private auth: AuthService,
-    private userService: UserService,
     private loadingController: LoadingController,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {
-    addIcons({heart})
+    addIcons({ heart });
   }
 
   ngOnInit(): void {
@@ -41,9 +53,11 @@ export class Tab2Page implements OnInit, OnDestroy{
     this.loadUser();
 
     // Suscribe al sujeto de nuevas fotos
-    this.nuevaFotoSubscription = this.imageService.onNuevaFoto().subscribe(() => {
-      this.loadPhotos(); // Actualiza la lista de fotos cuando se añade una nueva
-    });
+    // this.nuevaFotoSubscription = this.imageService
+    //   .onUploadNewPhoto()
+    //   .subscribe(() => {
+    //     this.loadPhotos(); // Actualiza la lista de fotos cuando se añade una nueva
+    //   });
   }
 
   ngOnDestroy(): void {
@@ -54,16 +68,19 @@ export class Tab2Page implements OnInit, OnDestroy{
   }
 
   async loadPhotos() {
+    this.spinner.show();
     this.imageService.traer().subscribe((data) => {
       this.fotos = data;
       this.ordenarPorFecha(this.fotos);
+      this.spinner.hide();
     });
   }
 
   async loadUser() {
-    const userEmail = this.auth.getUserEmail() as string;
+    const userEmail = this.auth.getCurrentUserEmail() as string;
+
     if (userEmail) {
-      this.userService.getUserByEmail(userEmail).subscribe(
+      this.auth.getUserByEmail(userEmail).subscribe(
         (user) => {
           this.user = user;
         },
@@ -85,9 +102,6 @@ export class Tab2Page implements OnInit, OnDestroy{
   }
 
   async vote(photo: Foto, cardId: string) {
-    console.log(photo);
-    console.log(this.user);
-
     if (!photo.votes) {
       photo.votes = [];
     }
@@ -97,11 +111,9 @@ export class Tab2Page implements OnInit, OnDestroy{
     }
 
     if (this.checkVotes(photo)) {
-      console.log("Agregando like");
       photo.votes.push(this.user!.id);
       this.user!.votos.push(photo.id);
     } else {
-      console.log("Sacando like");
       const indice = photo.votes.indexOf(this.user!.id);
       if (indice !== -1) {
         photo.votes.splice(indice, 1);
@@ -133,11 +145,16 @@ export class Tab2Page implements OnInit, OnDestroy{
   }
 
   checkVotes(photo: Foto): boolean {
-    return !(this.user && photo && photo.votes && photo.votes.includes(this.user.id));
+    return !(
+      this.user &&
+      photo &&
+      photo.votes &&
+      photo.votes.includes(this.user.id)
+    );
   }
 
   async updatePhotos() {
-    this.imageService.traer().subscribe(data => {
+    this.imageService.traer().subscribe((data) => {
       this.fotos = data;
       this.ordenarPorFecha(this.fotos);
     });
