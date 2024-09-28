@@ -17,8 +17,6 @@ export const routes: Routes = [
   {
     path: 'resultados',
     loadComponent: () =>
-      import('./resultados/resultados.component').then(
-        (m) => m.ResultadosComponent
-      ),
+      import('./results/results.component').then((m) => m.ResultsComponent),
   },
 ];

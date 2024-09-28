@@ -1,0 +1,29 @@
+<ion-header color="black">
+  <ion-toolbar>
+    <ion-button slot="start" fill="clear" (click)="back()">
+      <ion-icon name="arrow-back-circle-outline" class="large-icon"></ion-icon>
+    </ion-button>
+    <ion-title style="color: #d9d9d9">Resultados</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div *ngIf="fotosLindas.length > 0" class="chart">
+    <div
+      echarts
+      [initOpts]="initOpts"
+      [options]="optionsLindas"
+      [theme]="theme"
+      class="demo-chart"
+    ></div>
+  </div>
+  <div *ngIf="fotosFeas.length > 0" class="chart">
+    <div
+      echarts
+      [initOpts]="initOpts"
+      [options]="optionsFeas"
+      [theme]="theme"
+      class="demo-chart"
+    ></div>
+  </div>
+</ion-content>

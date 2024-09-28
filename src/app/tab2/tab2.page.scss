@@ -1,7 +1,13 @@
-ion-title {
-  color: #d9d9d9;
+ion-title,
+ion-button {
   font-family: "Ubuntu", sans-serif;
   font-weight: 300;
+  color: #d9d9d9;
+  text-transform: none;
+}
+
+.resultIcon {
+  margin-right: 10px;
 }
 
 .photo-grid {

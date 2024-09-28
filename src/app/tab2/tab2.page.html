@@ -1,6 +1,15 @@
 <ion-header [translucent]="true">
   <ion-toolbar color="black">
     <ion-title slot="start">Todas las fotos</ion-title>
+    <ion-button
+      aria-label="Ver Resultados"
+      fill="clear"
+      slot="end"
+      (click)="goToResults()"
+    >
+      <i class="fa fa-pie-chart resultIcon" aria-hidden="true"></i>
+      Resultados
+    </ion-button>
   </ion-toolbar>
 </ion-header>
 

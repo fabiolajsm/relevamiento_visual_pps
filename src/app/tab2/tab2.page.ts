@@ -12,6 +12,7 @@ import {
   IonToolbar,
   IonTitle,
   IonIcon,
+  IonButton,
 } from '@ionic/angular/standalone';
 import { Subscription } from 'rxjs';
 import { addIcons } from 'ionicons';
@@ -26,6 +27,7 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
   imports: [
     IonIcon,
     IonTitle,
+    IonButton,
     IonToolbar,
     IonContent,
     IonHeader,
@@ -160,7 +162,7 @@ export class Tab2Page implements OnInit, OnDestroy {
     });
   }
 
-  goResultados() {
+  goToResults() {
     this.router.navigate(['resultados']);
   }
 }
