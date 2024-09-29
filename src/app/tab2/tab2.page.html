@@ -14,6 +14,15 @@
 </ion-header>
 
 <ion-content [fullscreen]="true">
+  <ngx-spinner
+    bdColor="rgba(0, 0, 0, 0.8)"
+    size="medium"
+    color="#d9d9d9"
+    type="ball-scale-multiple"
+    [fullScreen]="true"
+    ><p style="color: #d9d9d9; font-family: Roboto">Cargando...</p>
+  </ngx-spinner>
+
   <div class="photo-grid" *ngIf="fotos.length">
     <div class="card" *ngFor="let foto of fotos">
       <img [src]="foto.url" [alt]="foto.id" />
@@ -34,14 +43,7 @@
       </button>
     </div>
   </div>
-  <p *ngIf="!fotos.length" class="empty">No se encontraron fotos</p>
+  <p *ngIf="!fotos.length && !isLoading" class="empty">
+    No se encontraron fotos
+  </p>
 </ion-content>
-
-<ngx-spinner
-  bdColor="rgba(0, 0, 0, 0.8)"
-  size="medium"
-  color="#edf2f4"
-  type="ball-scale-multiple"
-  [fullScreen]="true"
-  ><p style="color: #d9d9d9; font-family: Roboto">Cargando...</p>
-</ngx-spinner>

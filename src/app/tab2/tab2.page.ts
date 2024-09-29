@@ -14,7 +14,6 @@ import {
   IonIcon,
   IonButton,
 } from '@ionic/angular/standalone';
-import { Subscription } from 'rxjs';
 import { addIcons } from 'ionicons';
 import { heart } from 'ionicons/icons';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
@@ -35,10 +34,10 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
     NgxSpinnerModule,
   ],
 })
-export class Tab2Page implements OnInit, OnDestroy {
+export class Tab2Page implements OnInit {
   public fotos: Foto[] = [];
   public user: UserInterface | undefined | null;
-  private nuevaFotoSubscription: Subscription | undefined;
+  public isLoading: boolean = false;
 
   constructor(
     private imageService: ImageService,
@@ -51,36 +50,17 @@ export class Tab2Page implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    this.loadPhotos();
-    this.loadUser();
-
-    // Suscribe al sujeto de nuevas fotos
-    // this.nuevaFotoSubscription = this.imageService
-    //   .onUploadNewPhoto()
-    //   .subscribe(() => {
-    //     this.loadPhotos(); // Actualiza la lista de fotos cuando se añade una nueva
-    //   });
-  }
-
-  ngOnDestroy(): void {
-    // Desuscribe al destruir el componente para evitar fugas de memoria
-    if (this.nuevaFotoSubscription) {
-      this.nuevaFotoSubscription.unsubscribe();
-    }
-  }
-
-  async loadPhotos() {
+    this.isLoading = true;
     this.spinner.show();
+
+    // obtener fotos
     this.imageService.traer().subscribe((data) => {
       this.fotos = data;
       this.ordenarPorFecha(this.fotos);
+      this.isLoading = false;
       this.spinner.hide();
     });
-  }
-
-  async loadUser() {
     const userEmail = this.auth.getCurrentUserEmail() as string;
-
     if (userEmail) {
       this.auth.getUserByEmail(userEmail).subscribe(
         (user) => {
@@ -90,8 +70,6 @@ export class Tab2Page implements OnInit, OnDestroy {
           console.error('Error al obtener el usuario:', error);
         }
       );
-    } else {
-      console.error('No se ha proporcionado un email de usuario válido');
     }
   }
 
@@ -104,17 +82,16 @@ export class Tab2Page implements OnInit, OnDestroy {
   }
 
   async vote(photo: Foto, cardId: string) {
+    if (!this.user) return;
     if (!photo.votes) {
       photo.votes = [];
     }
-
-    if (!this.user?.votos) {
-      this.user!.votos = [];
+    if (!this.user.votos) {
+      this.user.votos = [];
     }
-
     if (this.checkVotes(photo)) {
       photo.votes.push(this.user!.id);
-      this.user!.votos.push(photo.id);
+      this.user.votos.push(photo.id);
     } else {
       const indice = photo.votes.indexOf(this.user!.id);
       if (indice !== -1) {
@@ -128,22 +105,6 @@ export class Tab2Page implements OnInit, OnDestroy {
 
     await this.imageService.votePhoto(photo, this.user!);
     await this.updatePhotos();
-
-    setTimeout(() => {
-      this.presentLoading();
-      const focusedCard = document.getElementById(cardId) as HTMLElement;
-      if (focusedCard) {
-        focusedCard.focus();
-      }
-    }, 100);
-  }
-
-  async presentLoading() {
-    const loading = await this.loadingController.create({
-      message: 'Cargando...',
-      duration: 100,
-    });
-    await loading.present();
   }
 
   checkVotes(photo: Foto): boolean {
@@ -156,9 +117,11 @@ export class Tab2Page implements OnInit, OnDestroy {
   }
 
   async updatePhotos() {
+    this.spinner.show();
     this.imageService.traer().subscribe((data) => {
       this.fotos = data;
       this.ordenarPorFecha(this.fotos);
+      this.spinner.hide();
     });
   }
 

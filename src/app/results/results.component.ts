@@ -72,9 +72,6 @@ export class ResultsComponent implements OnInit {
           this.fotosLindas.push(f);
         }
       });
-
-      console.log(this.fotosFeas, 'feas');
-
       this.prepareChartData(this.fotosLindas, 'Lindas', 'optionsLindas');
       this.prepareChartData(this.fotosFeas, 'Feas', 'optionsFeas');
     });
@@ -99,11 +96,14 @@ export class ResultsComponent implements OnInit {
     });
 
     this[optionVar] = {
-      backgroundColor: 'hsla(262, 30%, 30%, 0.8)',
+      backgroundColor:
+        optionVar === 'optionsLindas'
+          ? 'hsla(195, 50%, 30%, 0.8)'
+          : 'hsla(210, 100%, 20%, 0.8)',
       title: {
         left: 'center',
         text: title,
-        textStyle: { color: '#d9d9d9' },
+        textStyle: { color: '#d9d9d9', fontFamily: 'Ubuntu', fontWeight: 400 },
       },
       tooltip: {
         confine: true,

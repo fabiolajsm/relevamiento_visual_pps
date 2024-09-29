@@ -30,8 +30,8 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
 })
 export class Tab3Page implements OnInit, OnDestroy {
   fotos: Foto[] = [];
-  private fotoSubscription: Subscription | undefined;
-  private nuevaFotoSubscription: Subscription | undefined;
+  private nuevaFotoSubscription?: Subscription;
+  public isLoading = false;
 
   constructor(
     private imageService: ImageService,
@@ -40,30 +40,43 @@ export class Tab3Page implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit() {
-    if (this.auth.getCurrentUserEmail()) {
-      this.spinner.show();
-      this.fotoSubscription = this.imageService.fotos$.subscribe((fotos) => {
-        this.fotos = fotos;
+    this.loadUserPhotos();
+    this.subscribeToNewPhotos();
+  }
+
+  private loadUserPhotos() {
+    this.isLoading = true;
+    this.spinner.show();
+
+    const userEmail = this.auth.getCurrentUserEmail();
+    if (userEmail) {
+      this.imageService.traerFotosUsuario(userEmail).subscribe({
+        next: (fotos) => {
+          this.fotos = fotos;
+          this.isLoading = false;
+          this.spinner.hide();
+        },
+        error: (error) => {
+          console.error('Error loading user photos:', error);
+          this.isLoading = false;
+          this.spinner.hide();
+        },
       });
-
-      this.imageService.notifyFotosChange();
+    } else {
+      this.isLoading = false;
+      this.spinner.hide();
     }
+  }
 
+  private subscribeToNewPhotos() {
     this.nuevaFotoSubscription = this.imageService
       .onUploadNewPhoto()
       .subscribe(() => {
-        this.imageService.notifyFotosChange();
-        this.spinner.hide();
+        this.loadUserPhotos();
       });
   }
 
   ngOnDestroy(): void {
-    if (this.fotoSubscription) {
-      this.fotoSubscription.unsubscribe();
-    }
-
-    if (this.nuevaFotoSubscription) {
-      this.nuevaFotoSubscription.unsubscribe();
-    }
+    this.nuevaFotoSubscription?.unsubscribe();
   }
 }

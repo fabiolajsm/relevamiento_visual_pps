@@ -109,7 +109,10 @@
                 "output": "assets"
               }
             ],
-            "styles": ["src/global.scss"],
+            "styles": [
+              "src/global.scss",
+              "node_modules/ngx-spinner/animations/ball-scale-multiple.css"
+            ],
             "scripts": []
           },
           "configurations": {

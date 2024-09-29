@@ -5,6 +5,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
+  overflow: hidden; /* Para ocultar el desbordamiento */
 }
 
 .container {
@@ -18,7 +19,7 @@
   width: 300px;
   height: 300px;
   object-fit: cover;
-  animation: bounce 2s infinite;
+  animation: bounce 2s infinite, slideOut 0.5s ease-in-out forwards 4s; /* Rebote y deslizamiento */
 }
 
 /* Animación de rebote */
@@ -38,15 +39,28 @@
   }
 }
 
+/* Animación de deslizamiento a la izquierda */
+@keyframes slideOut {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-100%); /* Mover hacia la izquierda */
+  }
+}
+
 h1,
 h2 {
   font-family: "Ubuntu", sans-serif;
   color: #d9d9d9;
+  animation: slideOut 0.5s ease-in-out forwards 4s; /* Desplazamiento al mismo tiempo que la imagen */
 }
+
 h1 {
   margin-top: 40px;
   font-size: 24px;
 }
+
 h2 {
-  font-size: 15px;
+  font-size: 17px;
 }
