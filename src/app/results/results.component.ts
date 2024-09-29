@@ -55,6 +55,8 @@ export class ResultsComponent implements OnInit {
   optionsFeas!: EChartsOption; // Opciones para la gráfica de "feas"
   optionsLindas!: EChartsOption; // Opciones para la gráfica de "lindas"
   theme!: string | ThemeOption;
+  public hasVotesFeas: boolean = false;
+  public hasVotesLindas: boolean = false;
 
   public fotosFeas: Foto[] = [];
   public fotosLindas: Foto[] = [];
@@ -72,8 +74,15 @@ export class ResultsComponent implements OnInit {
           this.fotosLindas.push(f);
         }
       });
-      this.prepareChartData(this.fotosLindas, 'Lindas', 'optionsLindas');
-      this.prepareChartData(this.fotosFeas, 'Feas', 'optionsFeas');
+      this.hasVotesFeas = this.fotosFeas.some((f) => f.votes.length > 0);
+      this.hasVotesLindas = this.fotosLindas.some((f) => f.votes.length > 0);
+
+      if (this.hasVotesLindas) {
+        this.prepareChartData(this.fotosLindas, 'Lindas', 'optionsLindas');
+      }
+      if (this.hasVotesFeas) {
+        this.prepareChartData(this.fotosFeas, 'Feas', 'optionsFeas');
+      }
     });
   }
 

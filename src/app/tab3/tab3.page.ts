@@ -41,7 +41,6 @@ export class Tab3Page implements OnInit, OnDestroy {
 
   ngOnInit() {
     this.loadUserPhotos();
-    this.subscribeToNewPhotos();
   }
 
   private loadUserPhotos() {
@@ -53,6 +52,7 @@ export class Tab3Page implements OnInit, OnDestroy {
       this.imageService.traerFotosUsuario(userEmail).subscribe({
         next: (fotos) => {
           this.fotos = fotos;
+          this.ordenarPorFecha(fotos);
           this.isLoading = false;
           this.spinner.hide();
         },
@@ -68,15 +68,23 @@ export class Tab3Page implements OnInit, OnDestroy {
     }
   }
 
-  private subscribeToNewPhotos() {
-    this.nuevaFotoSubscription = this.imageService
-      .onUploadNewPhoto()
-      .subscribe(() => {
-        this.loadUserPhotos();
-      });
-  }
-
   ngOnDestroy(): void {
     this.nuevaFotoSubscription?.unsubscribe();
+  }
+
+  ordenarPorFecha(fotos: Foto[]) {
+    fotos.sort((a: Foto, b: Foto) => {
+      const [diaA, mesA, anioA, horaA, minutoA] = a.fecha
+        .split(/[- :]/)
+        .map(Number);
+      const [diaB, mesB, anioB, horaB, minutoB] = b.fecha
+        .split(/[- :]/)
+        .map(Number);
+
+      const fechaA = new Date(anioA, mesA - 1, diaA, horaA, minutoA);
+      const fechaB = new Date(anioB, mesB - 1, diaB, horaB, minutoB);
+
+      return fechaB.getTime() - fechaA.getTime(); // Orden descendente
+    });
   }
 }

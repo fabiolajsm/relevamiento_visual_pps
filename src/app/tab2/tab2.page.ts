@@ -56,8 +56,6 @@ export class Tab2Page implements OnInit, OnDestroy {
 
     // obtener fotos
     this.getPhotosSub = this.imageService.traer().subscribe((data) => {
-      console.log(data, 'dataaa');
-      
       this.fotos = data;
       this.ordenarPorFecha(this.fotos);
       this.isLoading = false;
@@ -83,9 +81,17 @@ export class Tab2Page implements OnInit, OnDestroy {
 
   ordenarPorFecha(fotos: Foto[]) {
     fotos.sort((a: Foto, b: Foto) => {
-      const horaA = new Date(a.fecha);
-      const horaB = new Date(b.fecha);
-      return horaB.getTime() - horaA.getTime();
+      const [diaA, mesA, anioA, horaA, minutoA] = a.fecha
+        .split(/[- :]/)
+        .map(Number);
+      const [diaB, mesB, anioB, horaB, minutoB] = b.fecha
+        .split(/[- :]/)
+        .map(Number);
+
+      const fechaA = new Date(anioA, mesA - 1, diaA, horaA, minutoA);
+      const fechaB = new Date(anioB, mesB - 1, diaB, horaB, minutoB);
+
+      return fechaB.getTime() - fechaA.getTime(); // Orden descendente
     });
   }
 
@@ -99,10 +105,10 @@ export class Tab2Page implements OnInit, OnDestroy {
     }
     if (this.checkVotes(photo)) {
       photo.votes.push(this.user!.id);
-      this.user.votos.push(photo.id);
+      this.user.votos.push(photo.id ?? '');
     } else {
       const indice = photo.votes.indexOf(this.user!.id);
-      if (indice !== -1) {
+      if (indice !== -1 && photo.id) {
         photo.votes.splice(indice, 1);
         const indiceUser = this.user!.votos.indexOf(photo.id);
         if (indiceUser !== -1) {

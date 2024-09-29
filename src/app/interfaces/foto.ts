@@ -1,5 +1,5 @@
 export interface Foto {
-    id: string,
+    id?: string,
     url: string,
     user: string,
     tipo: string,

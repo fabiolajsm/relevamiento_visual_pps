@@ -5,24 +5,40 @@ import {
   IonTitle,
   IonContent,
   IonButton,
+  IonToast,
 } from '@ionic/angular/standalone';
 import { Camera, CameraResultType } from '@capacitor/camera';
 import { ImageService } from '../services/image.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
+import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-tab1',
   templateUrl: 'tab1.page.html',
   styleUrls: ['tab1.page.scss'],
   standalone: true,
-  imports: [IonButton, IonHeader, IonToolbar, IonTitle, IonContent],
+  imports: [
+    IonButton,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonContent,
+    IonToast,
+    NgxSpinnerModule,
+    CommonModule,
+  ],
 })
 export class Tab1Page {
+  uploadMessage: string = '';
+  error: boolean = false;
+
   constructor(
     private imageService: ImageService,
     private auth: AuthService,
-    private router: Router
+    private router: Router,
+    private spinner: NgxSpinnerService
   ) {}
 
   async handleNicePhoto() {
@@ -35,15 +51,17 @@ export class Tab1Page {
       promptLabelPhoto: 'Desde Galeria',
     });
 
-    // image.webPath will contain a path that can be set as an image src.
-    // You can access the original file using image.path, which can be
-    // passed to the Filesystem API to read the raw data of the image,
-    // if desired (or pass resultType: CameraResultType.Base64 to getPhoto)
+    if (!image) return;
+    this.spinner.show();
 
-    if (image) {
-      this.imageService.subirImg(image, 'linda');
-    }
-    // .then(res => console.log(res));
+    const imageUrl = await this.imageService.subirImg(image, 'linda');
+    this.uploadMessage =
+      imageUrl !== null
+        ? 'Foto linda subida exitosamente'
+        : 'Error al subir foto, intente más tarde';
+    this.error = imageUrl === null;
+
+    this.spinner.hide();
   }
 
   async handleUglyPhoto() {
@@ -56,9 +74,16 @@ export class Tab1Page {
       promptLabelPhoto: 'Desde Galeria',
     });
 
-    if (image) {
-      this.imageService.subirImg(image, 'fea');
-    }
+    if (!image) return;
+    this.spinner.show();
+    const imageUrl = await this.imageService.subirImg(image, 'fea');
+    this.uploadMessage =
+      imageUrl !== null
+        ? 'Foto fea subida exitosamente'
+        : 'Error al subir foto, intente más tarde';
+    this.error = imageUrl === null;
+
+    this.spinner.hide();
   }
 
   handleLogout() {
