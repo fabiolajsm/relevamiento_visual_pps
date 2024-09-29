@@ -4,7 +4,6 @@ import { UserInterface } from '../interfaces/user';
 import { ImageService } from '../services/image.service';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
-import { LoadingController } from '@ionic/angular';
 import { CommonModule } from '@angular/common';
 import {
   IonHeader,
@@ -17,6 +16,7 @@ import {
 import { addIcons } from 'ionicons';
 import { heart } from 'ionicons/icons';
 import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-tab2',
@@ -34,15 +34,16 @@ import { NgxSpinnerModule, NgxSpinnerService } from 'ngx-spinner';
     NgxSpinnerModule,
   ],
 })
-export class Tab2Page implements OnInit {
+export class Tab2Page implements OnInit, OnDestroy {
   public fotos: Foto[] = [];
   public user: UserInterface | undefined | null;
   public isLoading: boolean = false;
+  private getPhotosSub?: Subscription;
+  private getUserSub?: Subscription;
 
   constructor(
     private imageService: ImageService,
     private auth: AuthService,
-    private loadingController: LoadingController,
     private router: Router,
     private spinner: NgxSpinnerService
   ) {
@@ -54,7 +55,9 @@ export class Tab2Page implements OnInit {
     this.spinner.show();
 
     // obtener fotos
-    this.imageService.traer().subscribe((data) => {
+    this.getPhotosSub = this.imageService.traer().subscribe((data) => {
+      console.log(data, 'dataaa');
+      
       this.fotos = data;
       this.ordenarPorFecha(this.fotos);
       this.isLoading = false;
@@ -62,7 +65,7 @@ export class Tab2Page implements OnInit {
     });
     const userEmail = this.auth.getCurrentUserEmail() as string;
     if (userEmail) {
-      this.auth.getUserByEmail(userEmail).subscribe(
+      this.getUserSub = this.auth.getUserByEmail(userEmail).subscribe(
         (user) => {
           this.user = user;
         },
@@ -71,6 +74,11 @@ export class Tab2Page implements OnInit {
         }
       );
     }
+  }
+
+  ngOnDestroy(): void {
+    this.getPhotosSub?.unsubscribe();
+    this.getUserSub?.unsubscribe();
   }
 
   ordenarPorFecha(fotos: Foto[]) {

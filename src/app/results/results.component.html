@@ -26,4 +26,13 @@
       class="demo-chart"
     ></div>
   </div>
+  <p *ngIf="!fotosLindas.length && fotosFeas.length" class="empty">
+    Nadie ha votado por alguna foto linda
+  </p>
+  <p *ngIf="fotosLindas.length && !fotosFeas.length" class="empty">
+    Nadie ha votado por alguna foto fea
+  </p>
+  <p *ngIf="!fotosLindas.length && !fotosFeas.length" class="empty">
+    Nadie ha votado por alguna foto
+  </p>
 </ion-content>

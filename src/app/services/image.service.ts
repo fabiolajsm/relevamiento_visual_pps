@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import {
   Firestore,
   collection,
+  collectionData,
   doc,
   onSnapshot,
   orderBy,
@@ -80,34 +81,50 @@ export class ImageService {
     return this.newPhotoSubject.asObservable();
   }
 
+  // traer(): Observable<Foto[]> {
+  //   return new Observable<Foto[]>((observer) => {
+  //     onSnapshot(this.dataRefPhotos, (snap) => {
+  //       const fotos: Foto[] = [];
+  //       snap.docChanges().forEach((x) => {
+  //         const one = x.doc.data() as Foto;
+  //         fotos.push(one);
+  //       });
+  //       observer.next(fotos);
+  //     });
+  //   });
+  // }
+
   traer(): Observable<Foto[]> {
-    return new Observable<Foto[]>((observer) => {
-      onSnapshot(this.dataRefPhotos, (snap) => {
-        const fotos: Foto[] = [];
-        snap.docChanges().forEach((x) => {
-          const one = x.doc.data() as Foto;
-          fotos.push(one);
-        });
-        observer.next(fotos);
-      });
-    });
+    const users = this.dataRefPhotos;
+    return collectionData(users, { idField: 'id' }) as Observable<[]>;
   }
 
   traerFotosUsuario(email: string): Observable<Foto[]> {
     const userPhotosQuery = query(
-      this.dataRefPhotos,
-      where('user', '==', email),
-      orderBy('fecha', 'desc')
+      this.dataRefUsers,
+      where('users', '==', email),
+      orderBy('fecha', 'desc') // Esto necesita un índice
     );
+
     return new Observable<Foto[]>((observer) => {
-      onSnapshot(userPhotosQuery, (snap) => {
-        const fotos: Foto[] = [];
-        snap.docChanges().forEach((x) => {
-          const one = x.doc.data() as Foto;
-          fotos.push(one);
-        });
-        observer.next(fotos);
-      });
+      const unsubscribe = onSnapshot(
+        userPhotosQuery,
+        (snap) => {
+          const fotos: Foto[] = [];
+          snap.forEach((doc) => {
+            const one = { id: doc.id, ...doc.data() } as Foto;
+            fotos.push(one);
+          });
+          observer.next(fotos);
+        },
+        (error) => {
+          console.error('Error al obtener fotos del usuario:', error);
+          observer.error(error);
+        }
+      );
+
+      // Cleanup function
+      return () => unsubscribe();
     });
   }
 
