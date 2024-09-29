@@ -27,22 +27,12 @@ const firebaseConfig = {
   appId: '1:441368942075:web:bc051e980417f6f26ee75e',
 };
 
-const fireSanti = {
-  projectId: 'apps-pps-81fc4',
-  appId: '1:489192954714:web:59d62ba684f68dfc79f163',
-  storageBucket: 'apps-pps-81fc4.appspot.com',
-  apiKey: 'AIzaSyBzmcqe7augEBw_saxrPQMrvSBXQzAxt14',
-  authDomain: 'apps-pps-81fc4.firebaseapp.com',
-  messagingSenderId: '489192954714',
-};
-
-
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
     provideIonicAngular(),
     provideRouter(routes),
-    provideFirebaseApp(() => initializeApp(fireSanti)),
+    provideFirebaseApp(() => initializeApp(firebaseConfig)),
     provideFirestore(() => getFirestore()),
     provideAuth(() => getAuth()),
     provideStorage(() => getStorage()),
