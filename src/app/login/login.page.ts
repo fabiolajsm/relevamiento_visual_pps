@@ -66,7 +66,12 @@ export class LoginPage {
   }
 
   handleQuickAccess(email: string, password: string) {
+    this.errorMessage = '';
     this.form.controls['email'].setValue(email);
     this.form.controls['password'].setValue(password);
+  }
+
+  onInputChange() {
+    this.errorMessage = '';
   }
 }
