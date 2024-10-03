@@ -35,8 +35,29 @@ export class LoginPage {
 
   handleSubmit() {
     this.spinner.show();
+
+    // Verifica si el formulario es inválido
     if (this.form.invalid) {
-      this.errorMessage = 'Por favor, complete todos los campos correctamente.';
+      // Inicializa el mensaje de error
+      this.errorMessage = '';
+
+      // Verifica el email
+      if (this.form.controls['email'].invalid) {
+        this.errorMessage = 'El correo electrónico es inválido.';
+      }
+
+      // Verifica la contraseña
+      if (this.form.controls['password'].invalid) {
+        this.errorMessage += this.errorMessage ? ' ' : ''; // Espacio si ya hay un mensaje
+        this.errorMessage += 'La contraseña es requerida.';
+      }
+
+      // Si no hay un mensaje específico, muestra un mensaje general
+      if (!this.errorMessage) {
+        this.errorMessage =
+          'Por favor, complete todos los campos correctamente.';
+      }
+
       this.spinner.hide();
       return;
     }
