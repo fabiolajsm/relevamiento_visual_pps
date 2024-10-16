@@ -1,23 +1,11 @@
-body {
-  font-family: "Ubuntu", sans-serif;
-  background-color: black;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
-  margin: 0;
-  overflow: hidden; /* Para evitar el scroll durante la animación */
-}
-
 .fondo {
   background: #d9d9d9;
   border-radius: 8px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  padding: 20px;
-  margin: 60px auto;
-  max-width: 330px;
+  padding: 40px;
+  margin: 40px auto;
+  max-width: 340px;
   position: relative;
-  /* Animación */
   transform: translateX(100%);
   animation: slideIn 0.5s forwards;
 }
@@ -32,46 +20,49 @@ body {
 }
 
 .heading {
-  font-size: 24px;
+  font-size: 32px;
   color: #003566;
   font-weight: 600;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 30px;
 }
 
 .inputContainer {
   display: flex;
   align-items: center;
-  margin-bottom: 15px;
-  padding: 5px;
+  margin-bottom: 20px;
+  padding-bottom: 10px;
+  padding-top: 10px;
   width: 100%;
   color: #003566;
-}
 
-.inputIcon {
-  margin-right: 10px;
+  i {
+    margin-right: 10px;
+    font-size: 22px;
+  }
 }
 
 .inputField {
   border: none;
   outline: none;
-  flex: 1;
-  padding: 10px;
-  font-size: 16px;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 15px;
+  font-size: 22px;
+  max-width: 230px;
   background-color: white;
-  margin-left: 10px;
 }
 
 #button {
   background-color: #003566;
   color: #d9d9d9;
   border: none;
-  padding: 10px;
+  padding: 15px;
   width: 100%;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 16px;
-  margin-bottom: 15px;
+  font-size: 24px;
+  margin-bottom: 20px;
 }
 
 #button:hover {
@@ -90,12 +81,14 @@ body {
 
 .text-access {
   color: #003566;
+  font-size: 22px;
+  font-weight: 600;
 }
 
 .buttons-container {
   display: flex;
   flex-wrap: wrap;
-  gap: 10px;
+  gap: 15px;
   justify-content: center;
   width: 100%;
 }
@@ -104,10 +97,10 @@ body {
   background-color: #e7ecef;
   color: #2b2d42;
   border: none;
-  padding: 10px 15px;
+  padding: 15px 20px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 14px;
+  font-size: 20px;
 }
 
 .btn:hover {

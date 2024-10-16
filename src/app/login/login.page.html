@@ -9,7 +9,7 @@
         formControlName="email"
         type="text"
         class="inputField"
-        placeholder="Ingrese correo electrónico"
+        placeholder="Correo electrónico"
         (input)="onInputChange()"
       />
     </div>
@@ -21,12 +21,12 @@
         formControlName="password"
         type="password"
         class="inputField"
-        placeholder="Ingrese contraseña"
+        placeholder="Contraseña"
         (input)="onInputChange()"
       />
     </div>
 
-    <button id="button" type="submit">Iniciar Sesión</button>
+    <button id="button" type="submit">Iniciar sesión</button>
     <p class="text-center text-danger" *ngIf="errorMessage">
       {{ errorMessage }}
     </p>
@@ -35,7 +35,7 @@
   <p class="text-center text-access">Acceso rápido</p>
   <div class="buttons-container">
     <button class="btn" (click)="handleQuickAccess('admin@admin.com','111111')">
-      Admin
+      Administrador
     </button>
     <button
       class="btn"
@@ -59,7 +59,7 @@
       class="btn"
       (click)="handleQuickAccess('tester@tester.com', '555555')"
     >
-      Tester
+      Probador
     </button>
   </div>
 </div>
@@ -70,5 +70,8 @@
   color="#d9d9d9"
   type="ball-scale-multiple"
   [fullScreen]="true"
-  ><p style="color: #dee2e6; font-family: Roboto">Cargando...</p>
+>
+  <p style="color: #dee2e6; font-family: Ubuntu; font-size: 24px">
+    Cargando...
+  </p>
 </ngx-spinner>
