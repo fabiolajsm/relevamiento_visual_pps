@@ -12,14 +12,16 @@
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 20px;
 }
 
 .logo {
   border-radius: 50%;
-  width: 300px;
-  height: 300px;
+  width: 400px;
+  height: 340px;
   object-fit: cover;
-  animation: bounce 2s infinite, slideOut 0.5s ease-in-out forwards 4s; /* Rebote y deslizamiento */
+  overflow: hidden;
+  animation: bounce 2s infinite, slideOut 0.5s ease-in-out forwards 4s;
 }
 
 /* Animación de rebote */
@@ -58,9 +60,10 @@ h2 {
 
 h1 {
   margin-top: 40px;
-  font-size: 24px;
+  font-size: 33px;
 }
 
 h2 {
-  font-size: 17px;
+  font-size: 24px;
+  margin-top: 10px;
 }
