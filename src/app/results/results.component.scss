@@ -9,14 +9,23 @@ ion-icon {
   color: #d9d9d9;
 }
 
+ion-header {
+  margin-bottom: 30px;
+}
+
 .chart {
   display: flex;
   justify-content: center;
-  margin-top: 40px;
+  align-items: center;
 }
 
 .empty {
   text-align: center;
   margin-top: 40px;
   color: #d9d9d9;
+}
+
+.demo-chart {
+  margin-bottom: 15px;
+  height: auto !important;
 }

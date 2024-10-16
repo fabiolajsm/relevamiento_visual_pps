@@ -104,32 +104,90 @@ export class ResultsComponent implements OnInit {
       }
     });
 
-    this[optionVar] = {
-      backgroundColor:
-        optionVar === 'optionsLindas'
-          ? 'hsla(195, 50%, 30%, 0.8)'
-          : 'hsla(210, 100%, 20%, 0.8)',
-      title: {
-        left: 'center',
-        text: title,
-        textStyle: { color: '#d9d9d9', fontFamily: 'Ubuntu', fontWeight: 400 },
-      },
-      tooltip: {
-        confine: true,
-        trigger: 'item',
-        formatter:
-          '<div style="width: 9.5rem;"> {a}: {c} <br> <img src="{b}" alt="foto"></div>',
-      },
-      series: [
-        {
-          name: 'Votos',
-          type: 'pie',
-          radius: ['20%', '70%'],
-          roseType: 'radius',
-          data: series,
+    if (optionVar === 'optionsLindas') {
+      this[optionVar] = {
+        backgroundColor: '#d9d9d9',
+        title: {
+          left: 'center',
+          text: title,
+          textStyle: {
+            color: 'black',
+            fontFamily: 'Ubuntu',
+            fontWeight: 400,
+          },
         },
-      ],
-    };
+        tooltip: {
+          confine: true,
+          trigger: 'item',
+          formatter:
+            '<div style="width: 9.5rem; color: black"> {a}: {c} <br> <img src="{b}" alt="foto"></div>',
+        },
+        series: [
+          {
+            name: 'Votos',
+            type: 'pie',
+            radius: ['20%', '70%'],
+            roseType: 'radius',
+            data: series,
+          },
+        ],
+      };
+    } else {
+      this[optionVar] = {
+        backgroundColor: '#d9d9d9',
+        title: {
+          left: '50%',
+          text: 'Feas',
+          textAlign: 'center',
+          textStyle: {
+            color: 'black',
+            fontWeight: 400,
+            fontFamily: 'Ubuntu',
+          },
+        },
+        color: ['#003566'],
+        tooltip: {
+          confine: true,
+          trigger: 'item',
+          formatter:
+            '<div style="width: 9.5rem; color: black"> {a}: {c} <br>  <img src="{b}" alt="foto"></div>',
+          axisPointer: {
+            type: 'shadow',
+          },
+        },
+        grid: {
+          left: '3%',
+          right: '4%',
+          bottom: '3%',
+          containLabel: true,
+        },
+        xAxis: [
+          {
+            type: 'category',
+            data: [],
+            axisTick: {
+              alignWithLabel: true,
+            },
+          },
+        ],
+        yAxis: [
+          {
+            type: 'value',
+            axisLabel: {
+              color: 'black',
+            },
+          },
+        ],
+        series: [
+          {
+            name: 'Votos',
+            type: 'bar',
+            barWidth: '60%',
+            data: series,
+          },
+        ],
+      };
+    }
   }
 
   contabilizarFoto(photo: Foto) {
